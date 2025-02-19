@@ -400,10 +400,14 @@ function generate_the_site_logo_tag($is_header = true){
     $class = ' logo-footer';
   }
 
+  // ロゴ画像のURLを取得
   $logo_url = get_the_site_logo_url();
-  $footer_logo_ur = get_footer_logo_url();
-  if (!$is_header && $footer_logo_ur) {
-    $logo_url = $footer_logo_ur;
+  $footer_logo_url = get_footer_logo_url();
+  $fixed_logo_url = get_the_fixed_site_logo_url();
+  $mobile_logo_url = get_the_mobile_site_logo_url();
+
+  if (!$is_header && $footer_logo_url) {
+    $logo_url = $footer_logo_url;
   }
   if ( $logo_url ) {
     $class .= ' logo-image';
