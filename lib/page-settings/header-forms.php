@@ -114,7 +114,7 @@ if ( !defined( 'ABSPATH' ) ) exit; ?>
         <!-- ヘッダーロゴ（モバイル用） -->
         <tr>
           <th scope="row">
-            <?php generate_label_tag(OP_THE_MOBILE_SITE_LOGO_URL, __( 'ヘッダーロゴ（モバイル用）', THEME_NAME ) ); ?>
+            <?php generate_label_tag(OP_THE_MOBILE_SITE_LOGO_URL, __( 'ヘッダーロゴ（モバイル）', THEME_NAME ) ); ?>
           </th>
           <td>
             <?php
@@ -136,6 +136,22 @@ if ( !defined( 'ABSPATH' ) ) exit; ?>
             _e( ' × ', THEME_NAME );
             _e( '高さ：', THEME_NAME );
             generate_number_tag(OP_THE_SITE_LOGO_HEIGHT,  get_the_site_logo_height(), '', 0, 800);
+            generate_tips_tag(__( 'ロゴの縦横幅を指定します。ロゴのRetina対応などに。サイズ設定が不要の場合は空欄にしてください。「ヘッダーレイアウト」が「センターロゴ」でないと、ロゴサイズの変更までは行われません。', THEME_NAME ));
+            ?>
+          </td>
+        </tr>
+        <!-- ヘッダーロゴサイズ（モバイル） -->
+        <tr>
+          <th scope="row">
+            <?php generate_label_tag('', __( 'ヘッダーロゴサイズ（モバイル）', THEME_NAME ) ); ?>
+          </th>
+          <td>
+            <?php
+            _e( '幅：', THEME_NAME );
+            generate_number_tag(OP_THE_MOBILE_SITE_LOGO_WIDTH,  get_the_mobile_site_logo_width(), '', 0, 1600);
+            _e( ' × ', THEME_NAME );
+            _e( '高さ：', THEME_NAME );
+            generate_number_tag(OP_THE_MOBILE_SITE_LOGO_HEIGHT,  get_the_mobile_site_logo_height(), '', 0, 800);
             generate_tips_tag(__( 'ロゴの縦横幅を指定します。ロゴのRetina対応などに。サイズ設定が不要の場合は空欄にしてください。「ヘッダーレイアウト」が「センターロゴ」でないと、ロゴサイズの変更までは行われません。', THEME_NAME ));
             ?>
           </td>
