@@ -122,6 +122,10 @@ if (!is_amp()): ?>
           'width': '100%',
         });
 
+        // ロゴの切り替え
+        $(".no-fixed-logo-header").hide();
+        $(".fixed-logo-header").show();
+
         const wpadminbar = document.getElementById('wpadminbar');
         const headerContainerTop = wpadminbar ? wpadminbar.clientHeight : 0;
 
@@ -146,6 +150,10 @@ if (!is_amp()): ?>
           'left': 'auto',
           'width': 'auto',
         });
+
+        // ロゴの切り替え
+        $(".no-fixed-logo-header").show();
+        $(".fixed-logo-header").hide();
 
         /* ヘッダーの高さの戻る分、padding削除しスクロール位置を止まらせる */
         $("#header-fixed").css({
