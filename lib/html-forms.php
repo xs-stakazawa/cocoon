@@ -411,7 +411,7 @@ function generate_the_site_logo_tag($is_header = true){
   }
 
   // モバイルの場合はモバイル用のロゴ画像URLを取得
-  if (is_mobile() && $mobile_logo_url) {
+  if ($is_header && is_mobile() && $mobile_logo_url) {
     $logo_url = $mobile_logo_url;
   }
 
@@ -466,10 +466,11 @@ function generate_the_site_logo_tag($is_header = true){
     $logo_before_tag = '<'.$tag.' class="logo'.$class.'"><a href="'.esc_url($home_url).'" class="site-name site-name-text-link" itemprop="url"><span class="site-name-text"'.$itemprop.'>';
     $logo_after_tag = '</span></a></'.$tag.'>';
   } else {
+    // 固定でないヘッダー時のロゴ画像用タグ
     $no_fixed_class .= ' no-fixed-logo-header';
     $logo_before_tag = '<'.$tag.' class="logo'.$class.$no_fixed_class.'"><a href="'.esc_url($home_url).'" class="site-name site-name-text-link" itemprop="url"><span class="site-name-text"'.$itemprop.'>';
     $logo_after_tag = '</span></a></'.$tag.'>';
-
+    // 固定ヘッダー時のロゴ画像用タグ
     $fixed_class .= ' fixed-logo-header';
     $fixed_logo_before_tag = '<'.$tag.' class="logo'.$class.$fixed_class.'"><a href="'.esc_url($home_url).'" class="site-name site-name-text-link" itemprop="url"><span class="site-name-text"'.$itemprop.'>';
     $fixed_logo_after_tag = '</span></a></'.$tag.'>';
