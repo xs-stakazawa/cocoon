@@ -896,7 +896,7 @@ function dashboard_update_info() {
         <li>
           <a href="https://www.xserver.ne.jp/" target="_blank" rel="noreferrer">
             <span>
-              <img src="http://localhost:8081/wp-content/uploads/2025/03/xs-square-logo.png" alt="XSERVER">
+              <img src="<?php echo get_template_directory_uri(); ?>/images/ad-xs-square-logo.png" alt="XSERVER">
             </span>
             <span>
               <p class="xs-ad-widget-link__title">[広告] エックスサーバー</p>
@@ -907,7 +907,7 @@ function dashboard_update_info() {
         <li>
           <a href="https://xwrite.jp/" target="_blank" rel="noreferrer">
             <span>
-              <img src="http://localhost:8081/wp-content/uploads/2025/03/xw-square-logo.png" alt="XWRITE">
+              <img src="<?php echo get_template_directory_uri(); ?>/images/ad-xw-square-logo.png" alt="XWRITE">
             </span>
             <span>
               <p class="xs-ad-widget-link__title">[広告] XWRITE（エックスライト）</p>
