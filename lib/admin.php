@@ -853,6 +853,10 @@ function dashboard_update_widgets() {
     'cocoon_update_info',
     __('Cocoonアップデート情報', THEME_NAME ),
     'dashboard_update_info',
+    null,
+    null,
+    'normal',
+    'high'
   );
 }
 function dashboard_update_info() {
