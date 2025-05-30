@@ -640,7 +640,7 @@ function override_bbpress_templates_if_inactive( $template ) {
   if ( is_child_theme() ) {
     foreach ( $bbpress_templates as $bbpress_template ) {
       if ( file_exists( get_cocoon_stylesheet_directory() . '/' . $bbpress_template ) ) {
-        return $templates;
+        return $template;
       }
     }
   }
