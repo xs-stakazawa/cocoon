@@ -806,3 +806,82 @@ function add_custom_admin_body_class($classes) {
   $classes .= ' classicpress';
   return $classes;
 }
+
+//管理画面ダッシュボードにCocoonアップデート情報と広告を表示
+add_action( 'wp_dashboard_setup', 'dashboard_update_widgets' );
+function dashboard_update_widgets() {
+  wp_add_dashboard_widget(
+    'cocoon_update_info',
+    __('Cocoonアップデート情報', THEME_NAME ),
+    'dashboard_update_info',
+    null,
+    null,
+    'normal',
+    'high'
+  );
+}
+function dashboard_update_info() {
+  $update_posts = get_transient( 'cocoon-update-posts' );
+
+  if ( ! $update_posts ) {
+    $response = wp_remote_get( 'https://wp-cocoon.com/wp-json/wp/v2/posts?categories=2&per_page=5' );
+    if ( is_wp_error( $response ) ) {
+      return;
+    }
+    $update_posts = json_decode( wp_remote_retrieve_body( $response ) );
+    set_transient( 'cocoon-update-posts', $update_posts, 4 * HOUR_IN_SECONDS );
+  }
+
+  if ( empty( $update_posts ) ) return;
+
+  ?>
+  <div class="wordpress-news hide-if-no-js">
+    <div class="rss-widget">
+      <ul>
+        <?php foreach ( $update_posts as $item ) : ?>
+          <li><a href="<?php echo esc_url( $item->link ); ?>" target="_blank" rel="noreferrer"><?php echo esc_html( $item->title->rendered ); ?></a></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+    <style>
+    .xs-ad-widget-link ul { margin-bottom: 0; }
+    .xs-ad-widget-link ul li { margin-top: 14px; }
+    .xs-ad-widget-link ul li:first-child {}
+    .xs-ad-widget-link ul li a { display: flex; justify-content: center; align-items: center; color: #333; border: 1px solid #ccc; padding: 0 15px; }
+    .xs-ad-widget-link ul li span:nth-child(1) { width: 8%; min-width: 28px; margin-right: 4.5%; }
+    .xs-ad-widget-link ul li span:nth-child(1) img { width: 100%; }
+    .xs-ad-widget-link ul li span:nth-child(2) { width: 89%; }
+    .xs-ad-widget-link .xs-ad-widget-link__title { font-size: 15px; font-weight: bold; margin-bottom: 5px; }
+    .xs-ad-widget-link .xs-ad-widget-link__text { font-size: 13px; margin-top: 5px; }
+    @media screen and (min-width: 540px) { .xs-ad-widget-link ul li span:nth-child(1) { width: 6%; margin-right: 3.3%; } }
+    @media screen and (min-width: 660px) { .xs-ad-widget-link ul li span:nth-child(1) { width: 4%; } }
+    </style>
+    <div class="xs-ad-widget-link">
+      <ul>
+        <li>
+          <a href="https://www.xserver.ne.jp/" target="_blank" rel="noreferrer">
+            <span>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/ad-xs-square-logo.png" alt="XSERVER">
+            </span>
+            <span>
+              <p class="xs-ad-widget-link__title">[広告] エックスサーバー</p>
+              <p class="xs-ad-widget-link__text">国内シェアNo.1*のレンタルサーバー WordPress関連機能も提供　*2024年10月時点。W3Techs 調べ</p>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a href="https://xwrite.jp/" target="_blank" rel="noreferrer">
+            <span>
+              <img src="<?php echo get_template_directory_uri(); ?>/images/ad-xw-square-logo.png" alt="XWRITE">
+            </span>
+            <span>
+              <p class="xs-ad-widget-link__title">[広告] XWRITE（エックスライト）</p>
+              <p class="xs-ad-widget-link__text">エックスサーバー開発のブロックエディター対応WordPressテーマ　ブログ初心者向けに便利な機能を多数搭載</p>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <?php
+}
