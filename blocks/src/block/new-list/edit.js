@@ -70,13 +70,16 @@ export default function edit( props ) {
 
   // wp.coreから全カテゴリー情報の取得
   const categoryData = useSelect( ( select ) => {
-    return select( 'core' ).getEntityRecords( 'taxonomy', 'category', { per_page: -1 } );
+    return select( 'core' ).getEntityRecords( 'taxonomy', 'category', {
+      per_page: -1,
+    } );
   } );
 
   // 可変コントロールの定義
   let catsTextControl = (
     <Fragment>
       <TextControl
+        __next40pxDefaultSize={ true }
         label={ __( '表示するカテゴリーをカンマ区切りで指定', THEME_NAME ) }
         value={ cats }
         onChange={ ( value ) => setAttributes( { cats: value } ) }
@@ -85,7 +88,9 @@ export default function edit( props ) {
         title={ __( '表示カテゴリー選択', THEME_NAME ) }
         initialOpen={ true }
       >
-        <p className="howto">{ __( 'テキストを入力して絞り込んでください。', THEME_NAME ) }</p>
+        <p className="howto">
+          { __( 'テキストを入力して絞り込んでください。', THEME_NAME ) }
+        </p>
         <SearchControl
           value={ catSearchInput }
           onChange={ setCatSearchInput }
@@ -107,6 +112,8 @@ export default function edit( props ) {
 
   let tagsTextControl = (
     <TextControl
+      __nextHasNoMarginBottom={ true }
+      __next40pxDefaultSize={ true }
       label={ __( 'タグ', THEME_NAME ) }
       value={ tags }
       onChange={ ( value ) => setAttributes( { tags: value } ) }
@@ -131,6 +138,8 @@ export default function edit( props ) {
             onChange={ ( newValue ) => setAttributes( { count: newValue } ) }
             min={ 1 }
             max={ 100 }
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
           />
           <SelectControl
             label={ __( '表示タイプ', THEME_NAME ) }
@@ -142,7 +151,9 @@ export default function edit( props ) {
                 value: 'default',
               },
               {
-                label: __( 'カードの上下に区切り線を入れる', THEME_NAME ) + __( '（縦並び表示のみ）', THEME_NAME ),
+                label:
+                  __( 'カードの上下に区切り線を入れる', THEME_NAME ) +
+                  __( '（縦並び表示のみ）', THEME_NAME ),
                 value: 'border_partition',
               },
               {
@@ -154,12 +165,15 @@ export default function edit( props ) {
                 value: 'large_thumb',
               },
               {
-                label: __( '大きなサムネイルにタイトルを重ねて表示する', THEME_NAME ),
+                label: __(
+                  '大きなサムネイルにタイトルを重ねて表示する',
+                  THEME_NAME
+                ),
                 value: 'large_thumb_on',
               },
             ] }
             __nextHasNoMarginBottom={ true }
-            __next40pxDefaultSize={ true }  // 新しいデフォルトサイズに対応
+            __next40pxDefaultSize={ true } // 新しいデフォルトサイズに対応
           />
           <SelectControl
             label={ __( '表示順', THEME_NAME ) }
@@ -182,7 +196,7 @@ export default function edit( props ) {
               }
             } }
             __nextHasNoMarginBottom={ true }
-            __next40pxDefaultSize={ true }  // 新しいデフォルトサイズに対応
+            __next40pxDefaultSize={ true } // 新しいデフォルトサイズに対応
           />
           <SelectControl
             label={ __( '並び替え', THEME_NAME ) }
@@ -195,7 +209,7 @@ export default function edit( props ) {
               setAttributes( { order: value } );
             } }
             __nextHasNoMarginBottom={ true }
-            __next40pxDefaultSize={ true }  // 新しいデフォルトサイズに対応
+            __next40pxDefaultSize={ true } // 新しいデフォルトサイズに対応
           />
           <RangeControl
             label={ __( '読み飛ばし', THEME_NAME ) }
@@ -203,9 +217,12 @@ export default function edit( props ) {
             value={ offset }
             onChange={ ( newValue ) => setAttributes( { offset: newValue } ) }
             min={ 0 }
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
           />
           <Divider />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '横並び表示にする', THEME_NAME ) }
             checked={ horizontal }
             onChange={ ( isChecked ) =>
@@ -213,16 +230,19 @@ export default function edit( props ) {
             }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( 'タイトルを太字にする', THEME_NAME ) }
             checked={ bold }
             onChange={ ( isChecked ) => setAttributes( { bold: isChecked } ) }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( 'カードに矢印を表示する', THEME_NAME ) }
             checked={ arrow }
             onChange={ ( isChecked ) => setAttributes( { arrow: isChecked } ) }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '説明文を表示する', THEME_NAME ) }
             checked={ snippet }
             onChange={ ( isChecked ) =>
@@ -230,22 +250,23 @@ export default function edit( props ) {
             }
           />
           <ToggleControl
-            label={__('投稿日・更新日を表示する', THEME_NAME)}
-            checked={date}
-            onChange={(isChecked) =>
-              setAttributes({ date: isChecked })
-            }
+            __nextHasNoMarginBottom={ true }
+            label={ __( '投稿日・更新日を表示する', THEME_NAME ) }
+            checked={ date }
+            onChange={ ( isChecked ) => setAttributes( { date: isChecked } ) }
           />
           <ToggleControl
-            label={__('コメント数を表示する', THEME_NAME)}
-            checked={comment}
-            onChange={(isChecked) =>
-              setAttributes({ comment: isChecked })
+            __nextHasNoMarginBottom={ true }
+            label={ __( 'コメント数を表示する', THEME_NAME ) }
+            checked={ comment }
+            onChange={ ( isChecked ) =>
+              setAttributes( { comment: isChecked } )
             }
           />
         </PanelBody>
         <PanelBody title={ __( 'フィルタ', THEME_NAME ) } initialOpen={ false }>
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '全カテゴリーを表示する', THEME_NAME ) }
             checked={ showAllCats }
             onChange={ ( isChecked ) => {
@@ -257,6 +278,7 @@ export default function edit( props ) {
           { catsTextControl }
           <Divider />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '全タグを表示する', THEME_NAME ) }
             checked={ showAllTags }
             onChange={ ( isChecked ) => {
@@ -266,11 +288,14 @@ export default function edit( props ) {
           { tagsTextControl }
           <Divider />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '固定記事を表示する', THEME_NAME ) }
             checked={ sticky }
             onChange={ ( isChecked ) => setAttributes( { sticky: isChecked } ) }
           />
           <TextControl
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
             label={ __( '投稿タイプ', THEME_NAME ) }
             value={ post_type }
             onChange={ ( newValue ) =>
@@ -278,11 +303,15 @@ export default function edit( props ) {
             }
           />
           <TextControl
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
             label={ __( '検索グループ', THEME_NAME ) }
             value={ taxonomy }
             onChange={ ( newValue ) => setAttributes( { taxonomy: newValue } ) }
           />
           <TextControl
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
             label={ __( '投稿ユーザ', THEME_NAME ) }
             value={ author }
             onChange={ ( newValue ) => setAttributes( { author: newValue } ) }

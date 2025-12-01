@@ -6,7 +6,7 @@ Theme URI: https://wp-cocoon.com/
 Author: わいひら
 Author URI: https://nelog.jp/
 Text Domain: cocoon
-Version: 2.8.8.1
+Version: 2.8.8.2
 Requires at least: 6.1.0
 Requires PHP: 7.4.0
 Tags: two-columns, left-sidebar, right-sidebar
@@ -7603,6 +7603,11 @@ div.sbs-think:not(.not-nested-style) .speech-balloon::after {
 
 .acquired-date {
   font-size: 0.9em;
+}
+
+.amazon-search-message {
+  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
 .nwa .booklink-box, .nwa .kaerebalink-box, .nwa .tomarebalink-box, .nwa .product-item-box {

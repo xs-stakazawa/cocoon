@@ -79,6 +79,8 @@ export default function edit( props ) {
             initialOpen={ true }
           >
             <TextControl
+              __nextHasNoMarginBottom={ true }
+              __next40pxDefaultSize={ true }
               className={ 'cta-text-control cta-header-text-control' }
               label={ __( '見出し', THEME_NAME ) }
               value={ header }
@@ -104,7 +106,7 @@ export default function edit( props ) {
               ] }
               onChange={ ( value ) => setAttributes( { layout: value } ) }
               __nextHasNoMarginBottom={ true }
-              __next40pxDefaultSize={ true }  // 新しいデフォルトサイズに対応
+              __next40pxDefaultSize={ true } // 新しいデフォルトサイズに対応
             />
             <BaseControl
               className={ 'cta-base-control cta-image-base-control' }
@@ -143,15 +145,16 @@ export default function edit( props ) {
                   </MediaUploadCheck>
                 ) }
               </div>
-
             </BaseControl>
             <TextareaControl
+              __nextHasNoMarginBottom={ true }
               className={ 'cta-textarea-control cta-message-textarea-control' }
               label={ __( 'メッセージ', THEME_NAME ) }
               value={ message }
               onChange={ ( value ) => setAttributes( { message: value } ) }
             />
             <CheckboxControl
+              __nextHasNoMarginBottom={ true }
               className={
                 'cta-checkbox-control cta-paragraph-checkbox-control'
               }
@@ -162,12 +165,16 @@ export default function edit( props ) {
               }
             />
             <TextControl
+              __nextHasNoMarginBottom={ true }
+              __next40pxDefaultSize={ true }
               className={ 'cta-text-control cta-button-text-control' }
               label={ __( 'ボタンテキスト', THEME_NAME ) }
               value={ buttonText }
               onChange={ ( value ) => setAttributes( { buttonText: value } ) }
             />
             <TextControl
+              __nextHasNoMarginBottom={ true }
+              __next40pxDefaultSize={ true }
               className={ 'cta-text-control cta-button-url-text-control' }
               label={ __( 'ボタンURL', THEME_NAME ) }
               value={ buttonURL }
@@ -218,7 +225,7 @@ export default function edit( props ) {
               ] }
               onChange={ ( value ) => setAttributes( { buttonColor: value } ) }
               __nextHasNoMarginBottom={ true }
-              __next40pxDefaultSize={ true }  // 新しいデフォルトサイズに対応
+              __next40pxDefaultSize={ true } // 新しいデフォルトサイズに対応
             />
           </PanelBody>
         </Panel>

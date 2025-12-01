@@ -34,8 +34,16 @@ import { THEME_NAME, CreateCategoryList } from '../../helpers';
 
 export default function edit( props ) {
   const { attributes, setAttributes, className } = props;
-  const { count, showAllCats, cats, caption, showFrame, showDivider, modified, comment } =
-    attributes;
+  const {
+    count,
+    showAllCats,
+    cats,
+    caption,
+    showFrame,
+    showDivider,
+    modified,
+    comment,
+  } = attributes;
 
   const classes = classnames( 'info-list-box', 'block-box', {
     [ className ]: !! className,
@@ -48,13 +56,17 @@ export default function edit( props ) {
 
   // wp.coreから全カテゴリー情報の取得
   const categoryData = useSelect( ( select ) => {
-    return select( 'core' ).getEntityRecords( 'taxonomy', 'category', { per_page: -1 } );
+    return select( 'core' ).getEntityRecords( 'taxonomy', 'category', {
+      per_page: -1,
+    } );
   } );
 
   // 可変コントロールの定義
   let catsTextControl = (
     <Fragment>
       <TextControl
+        __nextHasNoMarginBottom={ true }
+        __next40pxDefaultSize={ true }
         label={ __( '表示するカテゴリーをカンマ区切りで指定', THEME_NAME ) }
         value={ cats }
         onChange={ ( value ) => setAttributes( { cats: value } ) }
@@ -86,6 +98,8 @@ export default function edit( props ) {
       <InspectorControls>
         <PanelBody title={ __( '基本設定', THEME_NAME ) } initialOpen={ true }>
           <TextControl
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
             label={ __( 'キャプション(枠線内表示)', THEME_NAME ) }
             value={ caption }
             onChange={ ( newValue ) => setAttributes( { caption: newValue } ) }
@@ -97,8 +111,11 @@ export default function edit( props ) {
             onChange={ ( newValue ) => setAttributes( { count: newValue } ) }
             min={ 1 }
             max={ 100 }
+            __nextHasNoMarginBottom={ true }
+            __next40pxDefaultSize={ true }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '枠線を表示する', THEME_NAME ) }
             checked={ showFrame }
             onChange={ ( isChecked ) =>
@@ -106,6 +123,7 @@ export default function edit( props ) {
             }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '仕切り線を表示する', THEME_NAME ) }
             checked={ showDivider }
             onChange={ ( isChecked ) =>
@@ -113,6 +131,7 @@ export default function edit( props ) {
             }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( 'コメント数を表示する', THEME_NAME ) }
             checked={ comment }
             onChange={ ( isChecked ) =>
@@ -120,6 +139,7 @@ export default function edit( props ) {
             }
           />
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '更新日順に並び替える', THEME_NAME ) }
             checked={ modified }
             onChange={ ( isChecked ) =>
@@ -129,6 +149,7 @@ export default function edit( props ) {
         </PanelBody>
         <PanelBody title={ __( 'フィルタ', THEME_NAME ) } initialOpen={ false }>
           <ToggleControl
+            __nextHasNoMarginBottom={ true }
             label={ __( '全カテゴリーを表示する', THEME_NAME ) }
             checked={ showAllCats }
             onChange={ ( isChecked ) => {
