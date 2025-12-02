@@ -251,10 +251,9 @@ function get_toc_tag($expanded_content, &$harray, $is_widget = false, $depth_opt
   </div>';
 
   global $_TOC_AVAILABLE_H_COUNT;
-  // 本文全ての目次を表示する場合は全ページの見出し数、そうでない場合は現在ページの見出し数
-  $available_h_count = $is_multi_page_toc_visible ? $header_count : $counter;
-  $_TOC_AVAILABLE_H_COUNT = $available_h_count;
-  if (!is_toc_display_count_available($available_h_count)){
+  // 表示条件は本文中の全見出し数で判定（深さ制限で除外される見出しも含む）
+  $_TOC_AVAILABLE_H_COUNT = $header_count;
+  if (!is_toc_display_count_available($header_count)){
     return ;
   }
 
