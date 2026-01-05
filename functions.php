@@ -617,20 +617,20 @@ add_filter('cocoon_part__tmp/categories-tags', function($content) {
 // bbPressが非アクティブな場合、特定のページテンプレートを非表示にする
 add_filter( 'theme_page_templates', 'hide_bbpress_templates_if_inactive' );
 function hide_bbpress_templates_if_inactive( $page_templates ) {
-  // bbPressがインストールされている場合は何もしない
   if ( is_bbpress_exist() ) {
     return $page_templates;
   }
 
-  // 非アクティブな場合、非表示にしたいbbPressテンプレートのファイル名またはパスを定義
-  $bbpress_templates_to_remove = [
+  $bbpress_templates = [
     'templates/page-create-topic.php',
     'templates/page-front-forums.php',
   ];
 
-  // 現在のテンプレートから、上記で定義したbbPressテンプレートを非表示
-  foreach ( $bbpress_templates_to_remove as $template ) {
-    unset( $page_templates[ $template ] );
+  foreach ( $bbpress_templates as $bbpress_template ) {
+    // 子テーマにテンプレートがなければ除外
+    if ( !( is_child_theme() && file_exists( get_cocoon_stylesheet_directory() . '/' . $bbpress_template ) ) ) {
+      unset( $page_templates[ $bbpress_template ] );
+    }
   }
 
   return $page_templates;
@@ -644,20 +644,20 @@ function override_bbpress_templates_if_inactive( $template ) {
     return $template;
   }
 
-  // 非アクティブな場合、上書きしたいbbPressテンプレートのファイル名またはパスを定義
-  // ここで定義されたテンプレートがもし現在読み込まれている場合、page.phpに切り替えます。
-  $bbpress_templates_to_override = [
+  $bbpress_templates = [
     'templates/page-create-topic.php',
     'templates/page-front-forums.php',
   ];
 
-  // 現在のテンプレートが、上書き対象のbbPressテンプレートのいずれかと一致するか確認
-  foreach ( $bbpress_templates_to_override as $bbpress_template ) {
-    if ( basename( $template ) === basename( $bbpress_template ) ) {
-      // WordPressのテンプレート階層に従い、page.phpを探して返す
+  foreach ( $bbpress_templates as $bbpress_template ) {
+    // 現在のテンプレートが対象かつ、子テーマにそのテンプレートが存在しない場合のみpage.phpに切り替え
+    if (
+      basename( $template ) === basename( $bbpress_template ) &&
+      ( !is_child_theme() || !file_exists( get_cocoon_stylesheet_directory() . '/' . $bbpress_template ) )
+    ) {
       $new_template = locate_template( 'page.php' );
       if ( !empty( $new_template ) ) {
-          return $new_template; // page.phpが見つかったら、それを読み込む
+        return $new_template;
       }
     }
   }
