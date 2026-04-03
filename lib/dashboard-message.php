@@ -74,60 +74,44 @@ endif;
 
 
 // ============================================================
-// Xwrite プロモーション通知バー（段階的表示）
+// Xwrite プロモーション通知バー
 //
 // 表示ロジック:
-//   1. 案1 を最初に表示する（初心者〜中級者）
-//   2. 案1 の × を押すと閉鎖日時を user_meta に保存
-//   3. 案1 閉鎖から XWRITE_PROMO_INTERVAL 秒（デフォルト=30日）経過後に 案2 を表示
-//   4. 案2 の × を押すと閉鎖日時を保存
-//   5. 案2 閉鎖から XWRITE_PROMO_INTERVAL 秒経過後に 案3 を表示
-//   6. 案3 の × を押したら以降は何も表示しない
+//   - XWRITE_PROMO_CURRENT がバージョン ID として機能する
+//   - ユーザーが × を押すと、そのバージョン ID を user_meta に保存する
+//   - 次回以降のページ読み込み時に保存値と XWRITE_PROMO_CURRENT を比較し、
+//     一致していれば非表示、異なれば表示する
+//
+// メッセージを差し替えるには:
+//   1. XWRITE_PROMO_MESSAGE のテキストを書き換えるだけでよい
+//      → テキストが変わると md5 ハッシュが変わり、バージョン ID が自動更新される
+//      → × で非表示済みのユーザーにも新しいメッセージが再表示される
 // ============================================================
 
-if ( ! defined( 'XWRITE_PROMO_MSG1_META' ) ) {
-	define( 'XWRITE_PROMO_MSG1_META', 'cocoon_xwrite_msg1_dismissed' );
+if ( ! defined( 'XWRITE_PROMO_DISMISSED_META' ) ) {
+	// ユーザーが最後に閉じたバージョン ID を保存する user_meta キー
+	define( 'XWRITE_PROMO_DISMISSED_META', 'cocoon_xwrite_dismissed_version' );
 }
-if ( ! defined( 'XWRITE_PROMO_MSG2_META' ) ) {
-	define( 'XWRITE_PROMO_MSG2_META', 'cocoon_xwrite_msg2_dismissed' );
+if ( ! defined( 'XWRITE_PROMO_MESSAGE' ) ) {
+	// ← メッセージを差し替えるときはここだけ変更する（バージョン ID は自動更新される）
+	define( 'XWRITE_PROMO_MESSAGE', 'プロが作ったデモサイトを丸ごと再現！コピー&ペーストの簡単操作で、あなたのブログが本格サイトに。Cocoonの記事も安全に引き継げるテーマ『Xwrite』を試してみませんか？' );
 }
-if ( ! defined( 'XWRITE_PROMO_MSG3_META' ) ) {
-	define( 'XWRITE_PROMO_MSG3_META', 'cocoon_xwrite_msg3_dismissed' );
-}
-if ( ! defined( 'XWRITE_PROMO_INTERVAL' ) ) {
-	define( 'XWRITE_PROMO_INTERVAL', 10 ); // テスト用: 10秒（本番は 30 * DAY_IN_SECONDS）
+if ( ! defined( 'XWRITE_PROMO_CURRENT' ) ) {
+	// メッセージテキストの md5 ハッシュをバージョン ID として使用（手動変更不要）
+	define( 'XWRITE_PROMO_CURRENT', md5( XWRITE_PROMO_MESSAGE ) );
 }
 
-// 表示すべきメッセージ ID を返す（静的キャッシュ付き）: 'msg1' | 'msg2' | 'msg3' | null
+// 表示すべきメッセージ ID を返す（静的キャッシュ付き）: 'msg1' | 'msg2' | ... | null
 if ( ! function_exists( 'xwrite_promo_get_message_id' ) ):
 function xwrite_promo_get_message_id() {
 	static $cache = 'unset';
 	if ( $cache !== 'unset' ) return $cache;
 
 	$user_id   = get_current_user_id();
-	$time_msg1 = (int) get_user_meta( $user_id, XWRITE_PROMO_MSG1_META, true );
-	$time_msg2 = (int) get_user_meta( $user_id, XWRITE_PROMO_MSG2_META, true );
-	$time_msg3 = (int) get_user_meta( $user_id, XWRITE_PROMO_MSG3_META, true );
+	$dismissed = get_user_meta( $user_id, XWRITE_PROMO_DISMISSED_META, true );
 
-	if ( $time_msg3 ) {
-		// 案3 も閉じ済み → 表示なし
-		$cache = null;
-	} elseif ( $time_msg2 && ( time() - $time_msg2 ) >= XWRITE_PROMO_INTERVAL ) {
-		// 案2 閉鎖から期間経過 → 案3 を表示
-		$cache = 'msg3';
-	} elseif ( $time_msg2 ) {
-		// 案2 は閉じたが期間未到達 → 表示なし
-		$cache = null;
-	} elseif ( $time_msg1 && ( time() - $time_msg1 ) >= XWRITE_PROMO_INTERVAL ) {
-		// 案1 閉鎖から期間経過 → 案2 を表示
-		$cache = 'msg2';
-	} elseif ( ! $time_msg1 ) {
-		// 案1 を未閉鎖 → 案1 を表示
-		$cache = 'msg1';
-	} else {
-		// 案1 は閉じたが期間未到達 → 表示なし
-		$cache = null;
-	}
+	// ユーザーが現在の案を既に閉じていれば非表示、それ以外は表示
+	$cache = ( $dismissed === XWRITE_PROMO_CURRENT ) ? null : XWRITE_PROMO_CURRENT;
 
 	return $cache;
 }
@@ -140,15 +124,8 @@ function xwrite_promo_render_notice() {
 	$msg_id = xwrite_promo_get_message_id();
 	if ( ! $msg_id ) return;
 
-	// @todo 公式サイト・移行手順の実際の URL に変更してください
 	$official_url  = 'https://xwrite.jp/';
 	$migration_url = 'https://xwrite.jp/migration/';
-
-	$messages = [
-		'msg1' => 'プロが作ったデモサイトを丸ごと再現！コピー&ペーストの簡単操作で、あなたのブログが本格サイトに。Cocoonの記事も安全に引き継げるテーマ『Xwrite』を試してみませんか？',
-		'msg2' => '記事の執筆に慣れてきたらブログの見た目も次のステージへ。Cocoonの次の選択肢としてぴったりな、公式移行プラグイン完備のテーマ『Xwrite』でデザインを一新しませんか？',
-		'msg3' => 'Cocoonからの乗り換えを検討中なら、公式移行プラグイン完備のテーマ『Xwrite』が最短ルート。記事の崩れを最小限に抑え、理想のデザインを今すぐ手に入れませんか？',
-	];
 
 	$nonce = wp_create_nonce( 'xwrite_promo_dismiss' );
 	?>
@@ -156,7 +133,7 @@ function xwrite_promo_render_notice() {
 		data-msg-id="<?php echo esc_attr( $msg_id ); ?>"
 		data-nonce="<?php echo esc_attr( $nonce ); ?>">
 		<p>
-			<?php echo esc_html( $messages[ $msg_id ] ); ?>
+			<?php echo esc_html( XWRITE_PROMO_MESSAGE ); ?>
 			[<a href="<?php echo esc_url( $official_url ); ?>" target="_blank" rel="noopener noreferrer">公式サイトへ</a>]
 			[<a href="<?php echo esc_url( $migration_url ); ?>" target="_blank" rel="noopener noreferrer">移行の手順を確認</a>]
 		</p>
@@ -165,7 +142,7 @@ function xwrite_promo_render_notice() {
 }
 endif;
 
-// AJAX ハンドラー: 閉鎖日時を user_meta に保存
+// AJAX ハンドラー: 閉じた案の ID を user_meta に保存
 add_action( 'wp_ajax_xwrite_promo_dismiss', 'xwrite_promo_ajax_dismiss' );
 if ( ! function_exists( 'xwrite_promo_ajax_dismiss' ) ):
 function xwrite_promo_ajax_dismiss() {
@@ -174,14 +151,8 @@ function xwrite_promo_ajax_dismiss() {
 	$msg_id  = isset( $_POST['msg_id'] ) ? sanitize_key( $_POST['msg_id'] ) : '';
 	$user_id = get_current_user_id();
 
-	$meta_map = [
-		'msg1' => XWRITE_PROMO_MSG1_META,
-		'msg2' => XWRITE_PROMO_MSG2_META,
-		'msg3' => XWRITE_PROMO_MSG3_META,
-	];
-
-	if ( isset( $meta_map[ $msg_id ] ) ) {
-		update_user_meta( $user_id, $meta_map[ $msg_id ], time() );
+	if ( $msg_id ) {
+		update_user_meta( $user_id, XWRITE_PROMO_DISMISSED_META, $msg_id );
 		wp_send_json_success();
 	}
 
