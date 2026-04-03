@@ -74,44 +74,55 @@ endif;
 
 
 // ============================================================
-// Xwrite プロモーション通知バー
+// Xwrite プロモーション通知バー（記事数連動方式）
 //
 // 表示ロジック:
-//   - XWRITE_PROMO_CURRENT がバージョン ID として機能する
-//   - ユーザーが × を押すと、そのバージョン ID を user_meta に保存する
-//   - 次回以降のページ読み込み時に保存値と XWRITE_PROMO_CURRENT を比較し、
-//     一致していれば非表示、異なれば表示する
-//
-// メッセージを差し替えるには:
-//   1. XWRITE_PROMO_MESSAGE のテキストを書き換えるだけでよい
-//      → テキストが変わると md5 ハッシュが変わり、バージョン ID が自動更新される
-//      → × で非表示済みのユーザーにも新しいメッセージが再表示される
+//   - サイトの累計公開記事数に応じて表示するメッセージを切り替える
+//     -  1〜15記事: 案1（初心者〜中級者向け）
+//     - 16〜49記事: 案2（運営が軌道に乗ってきた中級者向け）
+//     -  50記事以上: 案3（他テーマ検討中の層向け）
+//   - ユーザーが「通知を表示しない」をクリックすると、
+//     そのメッセージの非表示フラグを user_meta に保存し、永久に非表示になる
+//   - 記事数が増えて別の案に切り替わった場合、新しい案は再び表示される
+//     （各案ごとに独立して非表示フラグを管理しているため）
 // ============================================================
 
-if ( ! defined( 'XWRITE_PROMO_DISMISSED_META' ) ) {
-	// ユーザーが最後に閉じたバージョン ID を保存する user_meta キー
-	define( 'XWRITE_PROMO_DISMISSED_META', 'cocoon_xwrite_dismissed_version' );
+if ( ! defined( 'XWRITE_PROMO_MSG1_META' ) ) {
+	define( 'XWRITE_PROMO_MSG1_META', 'cocoon_xwrite_msg1_dismissed' ); //  1〜15記事
 }
-if ( ! defined( 'XWRITE_PROMO_MESSAGE' ) ) {
-	// ← メッセージを差し替えるときはここだけ変更する（バージョン ID は自動更新される）
-	define( 'XWRITE_PROMO_MESSAGE', 'プロが作ったデモサイトを丸ごと再現！コピー&ペーストの簡単操作で、あなたのブログが本格サイトに。Cocoonの記事も安全に引き継げるテーマ『Xwrite』を試してみませんか？' );
+if ( ! defined( 'XWRITE_PROMO_MSG2_META' ) ) {
+	define( 'XWRITE_PROMO_MSG2_META', 'cocoon_xwrite_msg2_dismissed' ); // 16〜49記事
 }
-if ( ! defined( 'XWRITE_PROMO_CURRENT' ) ) {
-	// メッセージテキストの md5 ハッシュをバージョン ID として使用（手動変更不要）
-	define( 'XWRITE_PROMO_CURRENT', md5( XWRITE_PROMO_MESSAGE ) );
+if ( ! defined( 'XWRITE_PROMO_MSG3_META' ) ) {
+	define( 'XWRITE_PROMO_MSG3_META', 'cocoon_xwrite_msg3_dismissed' ); // 50記事以上
 }
 
-// 表示すべきメッセージ ID を返す（静的キャッシュ付き）: 'msg1' | 'msg2' | ... | null
+// 表示すべきメッセージ ID を返す（静的キャッシュ付き）: 'msg1' | 'msg2' | 'msg3' | null
 if ( ! function_exists( 'xwrite_promo_get_message_id' ) ):
 function xwrite_promo_get_message_id() {
 	static $cache = 'unset';
 	if ( $cache !== 'unset' ) return $cache;
 
-	$user_id   = get_current_user_id();
-	$dismissed = get_user_meta( $user_id, XWRITE_PROMO_DISMISSED_META, true );
+	$post_count = (int) wp_count_posts()->publish;
+	$user_id    = get_current_user_id();
 
-	// ユーザーが現在の案を既に閉じていれば非表示、それ以外は表示
-	$cache = ( $dismissed === XWRITE_PROMO_CURRENT ) ? null : XWRITE_PROMO_CURRENT;
+	if ( $post_count >= 50 ) {
+		$msg_id   = 'msg3';
+		$meta_key = XWRITE_PROMO_MSG3_META;
+	} elseif ( $post_count >= 16 ) {
+		$msg_id   = 'msg2';
+		$meta_key = XWRITE_PROMO_MSG2_META;
+	} elseif ( $post_count >= 1 ) {
+		$msg_id   = 'msg1';
+		$meta_key = XWRITE_PROMO_MSG1_META;
+	} else {
+		// 記事0件 → 表示なし
+		$cache = null;
+		return $cache;
+	}
+
+	// ユーザーがそのメッセージを既に非表示にしていれば null を返す
+	$cache = get_user_meta( $user_id, $meta_key, true ) ? null : $msg_id;
 
 	return $cache;
 }
@@ -124,8 +135,15 @@ function xwrite_promo_render_notice() {
 	$msg_id = xwrite_promo_get_message_id();
 	if ( ! $msg_id ) return;
 
+	// @todo 公式サイト・移行手順の実際の URL に変更してください
 	$official_url  = 'https://xwrite.jp/';
 	$migration_url = 'https://xwrite.jp/migration/';
+
+	$messages = [
+		'msg1' => 'プロが作ったデモサイトを丸ごと再現！コピー&ペーストの簡単操作で、あなたのブログが本格サイトに。Cocoonの記事も安全に引き継げるテーマ『Xwrite』を試してみませんか？',
+		'msg2' => '記事の執筆に慣れてきたらブログの見た目も次のステージへ。Cocoonの次の選択肢としてぴったりな、公式移行プラグイン完備のテーマ『Xwrite』でデザインを一新しませんか？',
+		'msg3' => 'Cocoonからの乗り換えを検討中なら、公式移行プラグイン完備のテーマ『Xwrite』が最短ルート。記事の崩れを最小限に抑え、理想のデザインを今すぐ手に入れませんか？',
+	];
 
 	$nonce = wp_create_nonce( 'xwrite_promo_dismiss' );
 	?>
@@ -133,16 +151,17 @@ function xwrite_promo_render_notice() {
 		data-msg-id="<?php echo esc_attr( $msg_id ); ?>"
 		data-nonce="<?php echo esc_attr( $nonce ); ?>">
 		<p>
-			<?php echo esc_html( XWRITE_PROMO_MESSAGE ); ?>
+			<?php echo esc_html( $messages[ $msg_id ] ); ?>
 			[<a href="<?php echo esc_url( $official_url ); ?>" target="_blank" rel="noopener noreferrer">公式サイトへ</a>]
 			[<a href="<?php echo esc_url( $migration_url ); ?>" target="_blank" rel="noopener noreferrer">移行の手順を確認</a>]
+			[<a href="#" class="xwrite-promo-dismiss">通知を表示しない</a>]
 		</p>
 	</div>
 	<?php
 }
 endif;
 
-// AJAX ハンドラー: 閉じた案の ID を user_meta に保存
+// AJAX ハンドラー: 非表示フラグを user_meta に保存
 add_action( 'wp_ajax_xwrite_promo_dismiss', 'xwrite_promo_ajax_dismiss' );
 if ( ! function_exists( 'xwrite_promo_ajax_dismiss' ) ):
 function xwrite_promo_ajax_dismiss() {
@@ -151,8 +170,14 @@ function xwrite_promo_ajax_dismiss() {
 	$msg_id  = isset( $_POST['msg_id'] ) ? sanitize_key( $_POST['msg_id'] ) : '';
 	$user_id = get_current_user_id();
 
-	if ( $msg_id ) {
-		update_user_meta( $user_id, XWRITE_PROMO_DISMISSED_META, $msg_id );
+	$meta_map = [
+		'msg1' => XWRITE_PROMO_MSG1_META,
+		'msg2' => XWRITE_PROMO_MSG2_META,
+		'msg3' => XWRITE_PROMO_MSG3_META,
+	];
+
+	if ( isset( $meta_map[ $msg_id ] ) ) {
+		update_user_meta( $user_id, $meta_map[ $msg_id ], '1' );
 		wp_send_json_success();
 	}
 
@@ -160,7 +185,7 @@ function xwrite_promo_ajax_dismiss() {
 }
 endif;
 
-// インライン JS: DOM 移動（h1 の前に移動）＋ × ボタンの挙動
+// インライン JS: DOM 移動（h1 の前に移動）＋「通知を表示しない」の挙動
 add_action( 'admin_footer', 'xwrite_promo_inline_js' );
 if ( ! function_exists( 'xwrite_promo_inline_js' ) ):
 function xwrite_promo_inline_js() {
@@ -178,22 +203,33 @@ function xwrite_promo_inline_js() {
 			h1.parentNode.insertBefore( notice, h1 );
 		}
 
-		// × ボタンのクリックをイベント委譲で検知する
-		// （WP の is-dismissible がボタンを動的追加するため、委譲方式が必要）
-		notice.addEventListener( 'click', function ( e ) {
-			var btn = e.target.closest ? e.target.closest( '.notice-dismiss' ) : null;
-			if ( ! btn ) return;
-
+		// 非表示フラグをサーバーに記録する共通関数
+		function sendDismiss() {
 			var msgId = notice.getAttribute( 'data-msg-id' );
 			var nonce = notice.getAttribute( 'data-nonce' );
-
-			// 閉鎖日時をサーバーに記録（視覚的な非表示は WP の is-dismissible に任せる）
 			var fd = new FormData();
 			fd.append( 'action', 'xwrite_promo_dismiss' );
 			fd.append( 'nonce',  nonce );
 			fd.append( 'msg_id', msgId );
 			fetch( ajaxurl, { method: 'POST', body: fd, credentials: 'same-origin' } );
+		}
+
+		// WP 標準の × ボタン（is-dismissible が動的追加するため委譲方式）
+		notice.addEventListener( 'click', function ( e ) {
+			if ( e.target.closest && e.target.closest( '.notice-dismiss' ) ) {
+				sendDismiss();
+			}
 		} );
+
+		// 「通知を表示しない」テキストリンク
+		var dismissLink = notice.querySelector( '.xwrite-promo-dismiss' );
+		if ( dismissLink ) {
+			dismissLink.addEventListener( 'click', function ( e ) {
+				e.preventDefault();
+				notice.style.display = 'none';
+				sendDismiss();
+			} );
+		}
 	})();
 	</script>
 	<?php
@@ -207,14 +243,9 @@ function xwrite_promo_css() {
 	if ( ! xwrite_promo_get_message_id() ) return;
 	?>
 	<style>
-	/* WP 標準 .notice のスタイルをベースにし、色と×ボタン位置のみ上書き */
 	#xwrite-promo-notice {
 		border-left-color: #f5a623;
 		background-color: #fff8e1;
-	}
-	#xwrite-promo-notice .notice-dismiss {
-		top: 50%;
-		transform: translateY(-50%);
 	}
 	.block-editor-page #xwrite-promo-notice {
 		display: none;
