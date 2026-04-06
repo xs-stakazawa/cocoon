@@ -147,13 +147,16 @@ function xwrite_promo_render_notice() {
 
 	$nonce = wp_create_nonce( 'xwrite_promo_dismiss' );
 	?>
-	<div id="xwrite-promo-notice" class="notice is-dismissible"
+	<div id="xwrite-promo-notice" class="notice notice-warning is-dismissible"
 		data-msg-id="<?php echo esc_attr( $msg_id ); ?>"
 		data-nonce="<?php echo esc_attr( $nonce ); ?>">
 		<p>
-			<?php echo esc_html( $messages[ $msg_id ] ); ?>
+			<?php echo esc_html( $messages[ $msg_id ] ); ?><br>
+			<span class="xwrite-promo-links">
 			[<a href="<?php echo esc_url( $official_url ); ?>" target="_blank" rel="noopener noreferrer">公式サイトへ</a>]
 			[<a href="<?php echo esc_url( $migration_url ); ?>" target="_blank" rel="noopener noreferrer">移行の手順を確認</a>]
+			[<a href="#" class="xwrite-promo-dismiss">通知を表示しない</a>]
+			</span>
 		</p>
 	</div>
 	<?php
@@ -220,7 +223,15 @@ function xwrite_promo_inline_js() {
 			}
 		} );
 
-
+		// 「通知を表示しない」テキストリンク
+		var dismissLink = notice.querySelector( '.xwrite-promo-dismiss' );
+		if ( dismissLink ) {
+			dismissLink.addEventListener( 'click', function ( e ) {
+				e.preventDefault();
+				notice.style.display = 'none';
+				sendDismiss();
+			} );
+		}
 	})();
 	</script>
 	<?php
@@ -236,7 +247,10 @@ function xwrite_promo_css() {
 	<style>
 	#xwrite-promo-notice {
 		border-left-color: #f5a623;
-		background-color: #fff8e1;
+	}
+	#xwrite-promo-notice .xwrite-promo-links {
+		display: block;
+		margin-top: 4px;
 	}
 	.block-editor-page #xwrite-promo-notice {
 		display: none;
