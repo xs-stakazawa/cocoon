@@ -154,7 +154,6 @@ function xwrite_promo_render_notice() {
 			<?php echo esc_html( $messages[ $msg_id ] ); ?>
 			[<a href="<?php echo esc_url( $official_url ); ?>" target="_blank" rel="noopener noreferrer">公式サイトへ</a>]
 			[<a href="<?php echo esc_url( $migration_url ); ?>" target="_blank" rel="noopener noreferrer">移行の手順を確認</a>]
-			[<a href="#" class="xwrite-promo-dismiss">通知を表示しない</a>]
 		</p>
 	</div>
 	<?php
@@ -221,15 +220,7 @@ function xwrite_promo_inline_js() {
 			}
 		} );
 
-		// 「通知を表示しない」テキストリンク
-		var dismissLink = notice.querySelector( '.xwrite-promo-dismiss' );
-		if ( dismissLink ) {
-			dismissLink.addEventListener( 'click', function ( e ) {
-				e.preventDefault();
-				notice.style.display = 'none';
-				sendDismiss();
-			} );
-		}
+
 	})();
 	</script>
 	<?php
