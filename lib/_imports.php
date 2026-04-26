@@ -174,6 +174,7 @@ if (is_admin()) {;
   // if (is_dashboard_message_visible()) {
   //   require_once abspath(__FILE__).'dashboard-message.php'; //ダッシュボードに表示するメッセージ
   // }
+  require_once abspath(__FILE__).'dashboard-message.php'; //Xwrite通知バー
 }
 
 require_once abspath(__FILE__).'settings.php';   //WordPressの設定
