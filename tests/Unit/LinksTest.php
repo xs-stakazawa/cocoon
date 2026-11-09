@@ -182,12 +182,13 @@ class LinksTest extends TestCase
         $this->assertStringContainsString('target="_self"', $result);
     }
 
-    public function test_replace_target_attr_tag_blankで既存のtargetを置換する(): void
+    public function test_replace_target_attr_tag_既存のtargetは尊重される(): void
     {
         $tag = '<a href="https://example.com" target="_self">リンク</a>';
         $result = replace_target_attr_tag('blank', $tag);
-        $this->assertStringContainsString('target="_blank"', $result);
-        $this->assertStringNotContainsString('target="_self"', $result);
+        // 既存のtarget属性が設定されている場合は、それを尊重する
+        $this->assertStringContainsString('target="_self"', $result);
+        $this->assertStringNotContainsString('target="_blank"', $result);
     }
 
     public function test_replace_target_attr_tag_defaultでは変更しない(): void

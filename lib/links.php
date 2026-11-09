@@ -223,6 +223,10 @@ if ( !function_exists( 'replace_target_attr_tag' ) ):
 function replace_target_attr_tag( $link_open_type, $the_a_tag ) {
   //リンクの開き方を変更する場合
   if ($link_open_type != 'default') {
+    //既にtarget属性が設定されている場合は、それを尊重する
+    if (preg_match('/ *target="[^"]*?"/i', $the_a_tag)) {
+      return $the_a_tag;
+    }
     //外部リンクの開き方を変更する場合はtarget属性のクリアを行う
     $the_a_tag = preg_replace('/ *target="[^"]*?"/i', '', $the_a_tag);
     switch ($link_open_type) {
