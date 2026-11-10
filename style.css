@@ -8078,7 +8078,11 @@ div.fb-like-mobile {
 @supports (-moz-appearance: none) {
   .mobile-footer-menu-buttons {
     padding-bottom: 0;
-    bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (max-width: 599px) {
+    .mobile-footer-menu-buttons {
+      bottom: min(env(safe-area-inset-bottom, 0px), 34px);
+    }
   }
   body:not(.scrollable-mobile-buttons) .mobile-footer-menu-buttons {
     transition-property: opacity, transform;
@@ -11743,9 +11747,11 @@ _:-ms-lang(x), .mc-circle {
     margin-bottom: 50px;
   }
   @supports (-moz-appearance: none) {
-    .mblt-footer-mobile-buttons:not(.scrollable-mobile-buttons),
-    .mblt-header-and-footer-mobile-buttons:not(.scrollable-mobile-buttons) {
-      margin-bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+    @media screen and (max-width: 1023px) and (max-width: 599px) {
+      .mblt-footer-mobile-buttons:not(.scrollable-mobile-buttons),
+      .mblt-header-and-footer-mobile-buttons:not(.scrollable-mobile-buttons) {
+        margin-bottom: calc(50px + min(env(safe-area-inset-bottom, 0px), 34px));
+      }
     }
   }
   .scrollable-mobile-buttons {
