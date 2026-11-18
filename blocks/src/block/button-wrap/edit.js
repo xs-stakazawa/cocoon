@@ -1,5 +1,6 @@
 import { THEME_NAME, BUTTON_BLOCK } from '../../helpers';
 import { WidthPanel } from '../../components';
+import { normalizeCustomFontSize } from '../../components/custom-font-size';
 import { __ } from '@wordpress/i18n';
 import {
   InspectorControls,
@@ -47,6 +48,7 @@ export function ButtonWrapEdit( props ) {
     customBackgroundColor,
     customTextColor,
     customBorderColor,
+    customFontSize,
     width,
     justifyContent,
     verticalAlignment,
@@ -74,6 +76,8 @@ export function ButtonWrapEdit( props ) {
   } );
 
   const styles = {
+    // 定型サイズを優先したカスタム文字サイズの反映
+    fontSize: attributes.fontSize ? undefined : normalizeCustomFontSize( customFontSize ),
     '--cocoon-custom-border-color': customBorderColor || undefined,
     '--cocoon-custom-background-color': customBackgroundColor || undefined,
     '--cocoon-custom-text-color': customTextColor || undefined,
@@ -156,6 +160,7 @@ export function ButtonWrapEdit( props ) {
             fallbackFontSize={ fallbackFontSize }
             value={ fontSize.size }
             onChange={ setFontSize }
+            __nextHasNoMarginBottom={ true }
             __next40pxDefaultSize={ true }
           />
         </PanelBody>

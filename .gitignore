@@ -10,6 +10,7 @@ package-lock.json
 
 # Agent
 AGENTS.md
+/CONTRIBUTING.md
 .agent
 .agents/
 .codex/
@@ -20,6 +21,12 @@ AGENTS.md
 
 # 一時作業フォルダ
 /scratch/
+
+# Dockerのローカル検証環境と専用ツール
+/docker/
+/.dockerignore
+/scripts/dev-loop.js
+/tests/js/docker-integration-lock.test.js
 
 # GitHub Copilot
 .github/copilot-instructions.md
@@ -39,6 +46,7 @@ claudedocs
 vendor/
 
 # PHPUnit
+/.phpunit.result.cache
 .phpunit.cache/
 tests/coverage/
 configs/

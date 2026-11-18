@@ -1685,18 +1685,11 @@ msgstr "j F, Y (D)"
 msgid "H:i:s"
 msgstr "H:i:s"
 
-#: lib/comments.php:104
-#, php-format
-msgid ""
-"<span class=\"comment-author-label\">名前:</span><cite class=\"fn "
-"comment-author\">%s<span class=\"admin\"></span></a></cite><span "
-"class=\"comment-author-separator\"> :</span>"
-msgstr ""
-"<span class=\"comment-author-label\">Nome:</span><cite class=\"fn "
-"comment-author\">%s<span class=\"admin\"></span></a></cite><span "
-"class=\"comment-author-separator\"> :</span>"
+#: lib/comments.php:107
+msgid "名前:"
+msgstr "Nome:"
 
-#: lib/comments.php:106
+#: lib/comments.php:112
 msgid "投稿日："
 msgstr "Data de publicação:"
 
@@ -21761,6 +21754,23 @@ msgstr ""
 "concluída há muito tempo. A amostragem automática e a limpeza de dados "
 "podem não ser atualizadas. Verifique o WP-Cron ou as tarefas agendadas do "
 "servidor."
+
+#: lib/theme-update-requirements.php:97
+msgid "更新ZIP内の動作要件を確認できないため、Cocoonの更新を中止しました。"
+msgstr ""
+"A atualização do Cocoon foi cancelada porque não foi possível verificar os "
+"requisitos no ficheiro ZIP de atualização."
+
+#: lib/theme-update-requirements.php:103
+#. translators: 1: 必要なWordPressバージョン、2: 必要なPHPバージョン、3: 現在のWordPressバージョン、4: 現在のPHPバージョン
+#, php-format
+msgid ""
+"このCocoonへの更新にはWordPress %1$s以上・PHP %2$s以上が必要です。現在はWordPress %3$s・PHP "
+"%4$sのため、更新できません。"
+msgstr ""
+"Esta atualização do Cocoon requer o WordPress %1$s ou superior e o PHP %2$s "
+"ou superior. Este site utiliza atualmente o WordPress %3$s e o PHP %4$s, "
+"pelo que não é possível efetuar a atualização."
 
 #: lib/plugin-update-checker/Puc/v5p6/Plugin/Ui.php:217
 #, php-format

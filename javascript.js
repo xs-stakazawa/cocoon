@@ -55,24 +55,175 @@
       800
     );
   } );
-  //ボタン(.go-to-toc-common)のクリックイベント
-  $( '.go-to-toc-common' ).click( () => {
-    //目次へ移動する
-    $( 'body,html' ).animate(
-      {
-        scrollTop: $( '.entry-content .toc' ).offset().top,
-      },
-      800
+  // 目次と見出しの移動後に確保する上側の余白
+  const tocScrollGap = 8;
+  let tocScrollFrame = 0;
+  let tocScrollTimer;
+  let tocScrollTarget = null;
+
+  function getTocScrollTarget( hash ) {
+    // URL内の日本語などを含むハッシュからの要素IDの復元
+    let id;
+    try {
+      id = decodeURIComponent( hash.slice( 1 ) );
+    } catch ( error ) {
+      return null;
+    }
+    const target = document.getElementById( id );
+    if ( ! target || ! target.closest( '.entry-content' ) ) {
+      return null;
+    }
+    if ( target.matches( '.toc' ) ) {
+      return target;
+    }
+    // 見出し内の目次アンカーから、背景や枠も含む見出し全体への変換
+    const heading = target.closest( 'h1,h2,h3,h4,h5,h6' );
+    return heading && ( target === heading || /^toc\d+$/.test( id ) ) ? heading : null;
+  }
+
+  function getTocScrollOffset() {
+    const adminBar = document.getElementById( 'wpadminbar' );
+    const adminOffset = adminBar && getComputedStyle( adminBar ).position === 'fixed'
+      ? Math.max( 0, adminBar.getBoundingClientRect().bottom ) : 0;
+    let offset = adminOffset;
+    const header = document.getElementById( 'header-container' );
+    if ( header && header.classList.contains( 'fixed-header' ) ) {
+      // 出現アニメーション中の位置によらない、固定完了後のヘッダー下端
+      offset = Math.max( offset, adminOffset + header.offsetHeight );
+    }
+    const mobileHeader = document.querySelector( '.mobile-header-menu-buttons' );
+    if ( mobileHeader && getComputedStyle( mobileHeader ).position === 'fixed' ) {
+      // 上向きの移動で再表示されるモバイルメニューの高さの先取り
+      offset = Math.max( offset, adminOffset + mobileHeader.offsetHeight );
+    }
+    return offset;
+  }
+
+  function stopTocScrollCorrection() {
+    tocScrollTarget = null;
+    window.clearTimeout( tocScrollTimer );
+    window.cancelAnimationFrame( tocScrollFrame );
+    tocScrollFrame = 0;
+  }
+
+  function queueTocScrollCorrection() {
+    if ( ! tocScrollTarget || tocScrollFrame ) {
+      return;
+    }
+    tocScrollFrame = window.requestAnimationFrame( () => {
+      tocScrollFrame = 0;
+      const target = tocScrollTarget;
+      if ( ! target || ! target.isConnected || ! target.getClientRects().length ) {
+        return;
+      }
+      // 固定要素の下に見出し全体を表示するために不足する距離の算出
+      const targetTop = target.getBoundingClientRect().top;
+      const hiddenHeight = getTocScrollOffset() + tocScrollGap - targetTop;
+      // 履歴の位置復元で移動先が画面下へ外れた場合を含む、表示位置の補正
+      if ( hiddenHeight > 1 || targetTop >= window.innerHeight ) {
+        window.scrollTo( {
+          top: Math.max( 0, window.scrollY - hiddenHeight ),
+          left: window.scrollX,
+          behavior: 'instant',
+        } );
+      }
+    } );
+  }
+
+  function correctTocScroll( target ) {
+    stopTocScrollCorrection();
+    tocScrollTarget = target;
+    // 初回の固定化と再読み込み後の位置復元を対象とする、短時間の再補正
+    tocScrollTimer = window.setTimeout( stopTocScrollCorrection, 1500 );
+    queueTocScrollCorrection();
+  }
+
+  $window.on( 'scroll', queueTocScrollCorrection );
+  // 手動操作を妨げない、ホイール・タッチ・キー操作開始時の再補正の中止
+  [ 'wheel', 'touchstart', 'pointerdown', 'keydown' ].forEach( ( type ) => {
+    window.addEventListener( type, stopTocScrollCorrection, { passive: true } );
+  } );
+
+  // 通常の目次リンクと同じ余白を使う、モバイルの目次への移動
+  $( '.go-to-toc-common' ).on( 'click', ( event ) => {
+    const target = document.querySelector( '.entry-content .toc' );
+    if ( ! target ) {
+      return;
+    }
+    event.preventDefault();
+    const top = window.scrollY + target.getBoundingClientRect().top - getTocScrollOffset() - tocScrollGap;
+    const duration = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 0 : 800;
+    $( document.scrollingElement ).stop( true ).animate(
+      { scrollTop: Math.max( 0, top ) }, duration, () => correctTocScroll( target )
     );
   } );
 
-  //検索ボタンクリックでフォーカスを入力エリアに移す
+  function correctTocHash() {
+    const target = getTocScrollTarget( window.location.hash );
+    if ( target ) {
+      correctTocScroll( target );
+    }
+  }
+  $window.on( 'hashchange load', correctTocHash );
+  $window.on( 'pageshow', ( event ) => {
+    // ページ全体の履歴復元位置を維持する、通常表示時だけのハッシュ補正
+    if ( ! event.originalEvent.persisted ) {
+      correctTocHash();
+    }
+  } );
+  if ( document.readyState === 'complete' ) {
+    correctTocHash();
+  }
+
+  // 別ページへの移動や修飾キー操作を妨げない、同一ページ内リンクの判定
+  document.addEventListener( 'click', ( event ) => {
+    const link = event.target.closest( 'a[href]' );
+    if ( ! link || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey ||
+      link.hasAttribute( 'download' ) || ( link.target && link.target !== '_self' ) ) {
+      return;
+    }
+    let url;
+    try {
+      url = new URL( link.href, window.location.href );
+    } catch ( error ) {
+      return;
+    }
+    if ( url.origin !== window.location.origin || url.pathname !== window.location.pathname ||
+      url.search !== window.location.search || ! getTocScrollTarget( url.hash ) ) {
+      return;
+    }
+    // 同じハッシュの再クリックを含む、標準のリンク移動後の位置補正
+    window.setTimeout( () => {
+      if ( ! event.defaultPrevented ) {
+        correctTocHash();
+      }
+    }, 0 );
+  } );
+
+  // 検索メニューの開閉に応じた入力欄へのフォーカス移動
   $( '#search-menu-input' ).change( ( e ) => {
-    const searchEdit = $( '#search-menu-content .search-edit' ).first();
+    const searchEdit = document.querySelector( '#search-menu-content .search-edit' );
+    if ( ! searchEdit ) {
+      return;
+    }
     if ( e.target.checked ) {
-      searchEdit.focus();
+      // 表示途中の入力欄へのフォーカスによる、親画面のスクロール防止
+      searchEdit.focus( { preventScroll: true } );
     } else {
       searchEdit.blur();
+    }
+  } );
+
+  // スキンの表示アニメーション完了後の、未フォーカス入力欄への再移動
+  $( '#search-menu-content' ).on( 'transitionend', ( e ) => {
+    if ( e.target !== e.currentTarget ||
+      ! $( '#search-menu-input' ).prop( 'checked' ) ||
+      document.activeElement !== document.body ) {
+      return;
+    }
+    const searchEdit = e.currentTarget.querySelector( '.search-edit' );
+    if ( searchEdit ) {
+      searchEdit.focus( { preventScroll: true } );
     }
   } );
 
@@ -357,6 +508,70 @@
 
   // スクロール時にも更新（固定ヘッダーの表示切り替えに追従するため）
   window.addEventListener( 'scroll', updateHeaderOffset );
+} )();
+
+// スキンごとの検索ボタンの実寸に合わせた、標準消去ボタンの余白調整
+( function cocoonSearchFormSpacing() {
+  function initializeSearchFormSpacing() {
+    // 入力欄と検索ボタンがそろったフォームの抽出
+    const forms = Array.from( document.querySelectorAll( '.search-box' ) )
+      .map( ( form ) => ( {
+        input: form.querySelector( '.search-edit[type="search"]' ),
+        button: form.querySelector( '.search-submit' ),
+      } ) )
+      .filter( ( form ) => form.input && form.button );
+    if ( ! forms.length ) {
+      return;
+    }
+
+    let scheduled = false;
+    function updateSpacing() {
+      scheduled = false;
+      // 読み取りと書き込みの分離による、連続したレイアウト再計算の抑制
+      const measurements = forms.map( ( { input, button } ) => {
+        const inputRect = input.getBoundingClientRect();
+        const buttonRect = button.getBoundingClientRect();
+        if ( ! inputRect.width || ! buttonRect.width ) {
+          return null;
+        }
+        const border = parseFloat( getComputedStyle( input ).borderRightWidth ) || 0;
+        // ボタンの左端までの距離と、消去領域の右側の4pxの余白
+        const padding = Math.max( 0, inputRect.right - buttonRect.left - border + 4 );
+        return { input, value: padding.toFixed( 2 ) + 'px' };
+      } );
+      measurements.forEach( ( measurement ) => {
+        if ( measurement && measurement.input.style.getPropertyValue( '--cocoon-search-input-padding' ) !== measurement.value ) {
+          measurement.input.style.setProperty( '--cocoon-search-input-padding', measurement.value );
+        }
+      } );
+    }
+
+    // 同じフレーム内に届く表示変更・サイズ変更の計測の集約
+    function scheduleSpacing() {
+      if ( ! scheduled ) {
+        scheduled = true;
+        window.requestAnimationFrame( updateSpacing );
+      }
+    }
+
+    if ( 'ResizeObserver' in window ) {
+      const observer = new ResizeObserver( scheduleSpacing );
+      forms.forEach( ( { input, button } ) => {
+        observer.observe( input );
+        observer.observe( button );
+      } );
+    }
+    window.addEventListener( 'resize', scheduleSpacing );
+    window.addEventListener( 'load', scheduleSpacing, { once: true } );
+    document.addEventListener( 'change', scheduleSpacing );
+    scheduleSpacing();
+  }
+
+  if ( document.readyState === 'loading' ) {
+    document.addEventListener( 'DOMContentLoaded', initializeSearchFormSpacing );
+  } else {
+    initializeSearchFormSpacing();
+  }
 } )();
 
 // スキップリンクの移動先へのフォーカス付与

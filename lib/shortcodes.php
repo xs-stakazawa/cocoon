@@ -661,10 +661,12 @@ function get_navi_card_list_tag($atts){
     $url = $menu->url;
     $title = escape_shortcodes($menu->title);
     $snippet = strip_shortcodes($menu->description);
-    $classes = $menu->classes;
+    // クラス未指定時の空配列化と空のクラス名の除去
+    $classes = is_array($menu->classes ?? null) ? $menu->classes : array();
+    $classes = array_values(array_filter($classes, 'strlen'));
     $object = $menu->object;
     $object_id = $menu->object_id;
-    $ribbon_no = isset($menu->classes[0]) ? $menu->classes[0] : null;
+    $ribbon_no = $classes[0] ?? null;
 
     // target 属性を取得
     $target = isset($menu->target) && $menu->target === '_blank' ? '_blank' : '';
@@ -783,8 +785,9 @@ function get_box_menu_tag($atts){
       $img_url = $attr_title;
       $has_image_icon = true;
       $icon_tag = '<img src="'.esc_url($img_url).'" alt="" />';
-    } //アイコンフォントの場合
-    elseif (preg_match('/fa.? fa-[a-z\-]+/', $classes)) {
+    }
+    // 数字を含むアイコン名とFont Awesomeの有効な接頭辞の判定
+    elseif (preg_match('/(?:^|\s)(?:fa|fas|far|fab|fal|fad|fak|fat)\s+fa-[a-z0-9-]+(?:\s|$)/', $classes)) {
       $icon_tag = '<div class="'.esc_attr($classes).'" aria-hidden="true"></div>';
     }
     $icon_tag = '<div class="box-menu-icon">'.$icon_tag.'</div>';

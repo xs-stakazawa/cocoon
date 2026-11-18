@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License.
 msgid ""
 msgstr ""
-"Project-Id-Version: Cocoon 2.9.6\n"
+"Project-Id-Version: Cocoon 2.9.6.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/cocoon\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,18 +124,18 @@ msgstr ""
 msgid "コメントを書き込む"
 msgstr ""
 
-#: functions.php:175
+#: functions.php:178
 msgid "キーワード指定なし"
 msgstr ""
 
-#: functions.php:199
-#: functions.php:203
-#: functions.php:205
+#: functions.php:202
+#: functions.php:206
+#: functions.php:208
 msgid "Archives"
 msgstr ""
 
-#: functions.php:562
-#: functions.php:563
+#: functions.php:565
+#: functions.php:566
 #: lib/admin.php:621
 msgid "パターン一覧"
 msgstr ""
@@ -1221,7 +1221,7 @@ msgid "あわせて読みたい"
 msgstr ""
 
 #: lib/admin-tinymce-qtag.php:1687
-#: lib/shortcodes.php:1242
+#: lib/shortcodes.php:1245
 #: lib/utils.php:1070
 #: lib/widgets/cta-box.php:34
 #: blocks/src/block/blogcard/deprecated.js:146
@@ -1753,12 +1753,11 @@ msgstr ""
 msgid "H:i:s"
 msgstr ""
 
-#: lib/comments.php:104
-#, php-format
-msgid "<span class=\"comment-author-label\">名前:</span><cite class=\"fn comment-author\">%s<span class=\"admin\"></span></a></cite><span class=\"comment-author-separator\"> :</span>"
+#: lib/comments.php:107
+msgid "名前:"
 msgstr ""
 
-#: lib/comments.php:106
+#: lib/comments.php:112
 msgid "投稿日："
 msgstr ""
 
@@ -2894,7 +2893,7 @@ msgid "人気記事は見つかりませんでした。"
 msgstr ""
 
 #: lib/html-forms.php:1314
-#: lib/html-forms.php:1858
+#: lib/html-forms.php:1860
 msgid "記事は見つかりませんでした。"
 msgstr ""
 
@@ -2912,28 +2911,28 @@ msgstr ""
 msgid "管理者用エラーメッセージ"
 msgstr ""
 
-#: lib/html-forms.php:1714
+#: lib/html-forms.php:1716
 msgid "おすすめ"
 msgstr ""
 
-#: lib/html-forms.php:1717
+#: lib/html-forms.php:1719
 msgid "新着"
 msgstr ""
 
-#: lib/html-forms.php:1720
+#: lib/html-forms.php:1722
 msgid "注目"
 msgstr ""
 
-#: lib/html-forms.php:1723
+#: lib/html-forms.php:1725
 msgid "必見"
 msgstr ""
 
-#: lib/html-forms.php:1726
+#: lib/html-forms.php:1728
 msgid "お得"
 msgstr ""
 
-#: lib/html-forms.php:1769
-#: lib/shortcodes.php:1071
+#: lib/html-forms.php:1771
+#: lib/shortcodes.php:1074
 #: lib/widgets/info-list.php:19
 #: lib/widgets/info-list.php:96
 #: lib/widgets/info-list.php:105
@@ -3082,7 +3081,7 @@ msgstr ""
 #: lib/original-menu.php:163
 #: lib/original-menu.php:176
 #: lib/page-access/analytics/dashboard-page.php:12
-#: lib/page-access/analytics/export-func.php:15
+#: lib/page-access/analytics/export-func.php:282
 msgid "このページにアクセスする管理者権限がありません。"
 msgstr ""
 
@@ -3231,6 +3230,13 @@ msgid "集計データがまだありません。"
 msgstr ""
 
 #: lib/page-access/access-func.php:759
+#: lib/page-access/analytics/export-func.php:96
+#: lib/page-access/analytics/export-func.php:100
+#: lib/page-access/analytics/export-func.php:221
+#: lib/page-access/analytics/export-func.php:235
+#: lib/page-access/analytics/export-func.php:261
+#: lib/page-access/analytics/export-stream-func.php:147
+#: lib/page-access/analytics/export-stream-func.php:164
 msgid "データの取得に失敗しました。"
 msgstr ""
 
@@ -3253,16 +3259,16 @@ msgid "アクセス集計の詳細を見る"
 msgstr ""
 
 #: lib/page-access/analytics/ajax-func.php:21
-#: lib/page-access/analytics/map-post-picker.php:106
+#: lib/page-access/analytics/map-post-picker.php:132
 msgid "（無題）"
 msgstr ""
 
-#: lib/page-access/analytics/ajax-func.php:103
+#: lib/page-access/analytics/ajax-func.php:108
 msgid "(タイトルなし)"
 msgstr ""
 
-#: lib/page-access/analytics/ajax-func.php:244
-#: lib/page-access/analytics/ajax-func.php:284
+#: lib/page-access/analytics/ajax-func.php:249
+#: lib/page-access/analytics/ajax-func.php:289
 #: lib/page-access/analytics/dashboard-page.php:520
 #: lib/page-access/analytics/dashboard-page.php:540
 msgid "不明"
@@ -3289,7 +3295,7 @@ msgid "アクセスカレンダー（直近52週）"
 msgstr ""
 
 #: lib/page-access/analytics/dashboard-page.php:158
-#: lib/page-access/analytics/query-func.php:189
+#: lib/page-access/analytics/query-func.php:191
 #: lib/page-access/analytics/render-func.php:260
 #: lib/page-access/analytics/render-func.php:337
 #: lib/page-access/analytics/settings-forms.php:55
@@ -3306,7 +3312,7 @@ msgstr ""
 #: lib/page-access/analytics/dashboard-page.php:160
 #: lib/page-access/analytics/dashboard-page.php:556
 #: lib/page-access/analytics/dashboard-page.php:584
-#: lib/page-access/analytics/query-func.php:190
+#: lib/page-access/analytics/query-func.php:192
 #: lib/page-access/analytics/render-func.php:262
 #: lib/page-access/analytics/render-func.php:339
 #: lib/page-access/analytics/settings-forms.php:56
@@ -3317,7 +3323,7 @@ msgstr ""
 #: lib/page-access/analytics/dashboard-page.php:161
 #: lib/page-access/analytics/dashboard-page.php:557
 #: lib/page-access/analytics/dashboard-page.php:585
-#: lib/page-access/analytics/query-func.php:191
+#: lib/page-access/analytics/query-func.php:193
 #: lib/page-access/analytics/render-func.php:263
 #: lib/page-access/analytics/settings-forms.php:57
 #: lib/page-access/click-analytics/filter-func.php:73
@@ -3327,7 +3333,7 @@ msgstr ""
 #: lib/page-access/analytics/dashboard-page.php:162
 #: lib/page-access/analytics/dashboard-page.php:558
 #: lib/page-access/analytics/dashboard-page.php:586
-#: lib/page-access/analytics/query-func.php:192
+#: lib/page-access/analytics/query-func.php:194
 #: lib/page-access/analytics/render-func.php:264
 #: lib/page-access/analytics/settings-forms.php:58
 #: lib/page-access/click-analytics/filter-func.php:73
@@ -3335,7 +3341,7 @@ msgid "直近90日"
 msgstr ""
 
 #: lib/page-access/analytics/dashboard-page.php:163
-#: lib/page-access/analytics/query-func.php:193
+#: lib/page-access/analytics/query-func.php:195
 #: lib/page-access/analytics/render-func.php:265
 #: lib/page-access/analytics/render-func.php:340
 #: lib/page-access/analytics/settings-forms.php:59
@@ -3357,7 +3363,7 @@ msgstr ""
 #: lib/page-access/analytics/dashboard-page.php:166
 #: lib/page-access/analytics/dashboard-page.php:560
 #: lib/page-access/analytics/dashboard-page.php:588
-#: lib/page-access/analytics/query-func.php:195
+#: lib/page-access/analytics/query-func.php:197
 #: lib/page-access/analytics/render-func.php:268
 #: lib/page-access/analytics/settings-forms.php:60
 #: lib/page-access/click-analytics/filter-func.php:73
@@ -3592,7 +3598,7 @@ msgstr ""
 
 #: lib/page-access/analytics/dashboard-page.php:559
 #: lib/page-access/analytics/dashboard-page.php:587
-#: lib/page-access/analytics/query-func.php:194
+#: lib/page-access/analytics/query-func.php:196
 msgid "直近1年"
 msgstr ""
 
@@ -3779,7 +3785,7 @@ msgid "記事を検索中..."
 msgstr ""
 
 #: lib/page-access/analytics/enqueue-func.php:164
-#: lib/page-access/analytics/map-post-picker.php:118
+#: lib/page-access/analytics/map-post-picker.php:144
 msgid "人気記事トップ10"
 msgstr ""
 
@@ -3805,25 +3811,25 @@ msgstr ""
 msgid "%s件の候補"
 msgstr ""
 
-#: lib/page-access/analytics/export-func.php:19
+#: lib/page-access/analytics/export-func.php:286
 msgid "エクスポート機能が無効です。"
 msgstr ""
 
-#: lib/page-access/analytics/export-func.php:77
+#: lib/page-access/analytics/export-func.php:342
 msgid "対象が不正です。"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:87
+#: lib/page-access/analytics/map-post-picker.php:112
 #: lib/page-access/click-analytics/filter-func.php:8
 msgid "PC"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:87
+#: lib/page-access/analytics/map-post-picker.php:112
 #: lib/page-access/click-analytics/filter-func.php:8
 msgid "タブレット"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:87
+#: lib/page-access/analytics/map-post-picker.php:112
 #: lib/page-access/click-analytics/filter-func.php:8
 #: lib/page-settings/settings-tabs.php:39
 #: skins/silk/functions.php:229
@@ -3831,25 +3837,25 @@ msgid "モバイル"
 msgstr ""
 
 #. translators: %s: クリックマップの表示端末名
-#: lib/page-access/analytics/map-post-picker.php:94
+#: lib/page-access/analytics/map-post-picker.php:119
 #, php-format
 msgid "%sのクリック記録なし"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:107
+#: lib/page-access/analytics/map-post-picker.php:133
 msgid "アクセスの多い記事から選ぶ"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:110
+#: lib/page-access/analytics/map-post-picker.php:136
 msgid "クリック元記事:"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:116
+#: lib/page-access/analytics/map-post-picker.php:142
 #: lib/page-access/analytics/render-func.php:172
 msgid "記事の選択を解除"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:118
+#: lib/page-access/analytics/map-post-picker.php:144
 #: lib/page-access/click-analytics/render-func.php:125
 #: lib/page-settings/toc-forms.php:119
 #: lib/page-settings/toc-funcs.php:86
@@ -3857,16 +3863,16 @@ msgstr ""
 msgid "閉じる"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:119
-#: lib/page-access/analytics/map-post-picker.php:120
+#: lib/page-access/analytics/map-post-picker.php:145
+#: lib/page-access/analytics/map-post-picker.php:146
 msgid "ほかの記事を検索"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:122
+#: lib/page-access/analytics/map-post-picker.php:148
 msgid "記事候補"
 msgstr ""
 
-#: lib/page-access/analytics/map-post-picker.php:124
+#: lib/page-access/analytics/map-post-picker.php:150
 msgid "再試行"
 msgstr ""
 
@@ -4625,49 +4631,49 @@ msgstr ""
 msgid "プライバシー保護のため、外部画像などは自動で読み込まず、「画像を読み込む」を押したときに読み込みます。読み込むと、画像の配信元にお使いのIPアドレスなどが伝わります。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:349
+#: lib/page-access/click-analytics/rest-func.php:350
 msgid "クリック解析は無効です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:350
+#: lib/page-access/click-analytics/rest-func.php:351
 msgid "クリック解析テーブルがありません。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:352
+#: lib/page-access/click-analytics/rest-func.php:353
 msgid "送信サイズが不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:354
+#: lib/page-access/click-analytics/rest-func.php:355
 msgid "JSONが不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:355
+#: lib/page-access/click-analytics/rest-func.php:356
 msgid "送信元が不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:360
-#: lib/page-access/click-analytics/rest-func.php:374
+#: lib/page-access/click-analytics/rest-func.php:361
+#: lib/page-access/click-analytics/rest-func.php:375
 msgid "送信内容が不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:371
+#: lib/page-access/click-analytics/rest-func.php:372
 msgid "識別子が不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:376
+#: lib/page-access/click-analytics/rest-func.php:377
 msgid "計測トークンが不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:378
+#: lib/page-access/click-analytics/rest-func.php:379
 msgid "クリック元が不正です。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:379
+#: lib/page-access/click-analytics/rest-func.php:380
 msgid "送信回数が多すぎます。"
 msgstr ""
 
-#: lib/page-access/click-analytics/rest-func.php:384
-#: lib/page-access/click-analytics/rest-func.php:477
+#: lib/page-access/click-analytics/rest-func.php:385
+#: lib/page-access/click-analytics/rest-func.php:478
 msgid "計測データを保存できませんでした。再送してください。"
 msgstr ""
 
@@ -11173,7 +11179,7 @@ msgid "関連記事見出し"
 msgstr ""
 
 #: lib/page-settings/single-forms.php:145
-#: lib/shortcodes.php:1238
+#: lib/shortcodes.php:1241
 #: lib/widgets/cta-box.php:117
 #: blocks/src/block-universal/caption-box/deprecated.js:25
 #: blocks/src/block-universal/caption-box/edit.js:20
@@ -13870,27 +13876,27 @@ msgstr ""
 msgid "月別アーカイブ"
 msgstr ""
 
-#: lib/shortcodes.php:919
+#: lib/shortcodes.php:922
 msgid "RSSフィードを取得できません"
 msgstr ""
 
-#: lib/shortcodes.php:1044
+#: lib/shortcodes.php:1047
 msgid "updatedショートコードは投稿・固定ページ以外では利用できません。"
 msgstr ""
 
-#: lib/shortcodes.php:1168
+#: lib/shortcodes.php:1171
 msgid "保存エラー"
 msgstr ""
 
-#: lib/shortcodes.php:1186
+#: lib/shortcodes.php:1189
 msgid "エラー："
 msgstr ""
 
-#: lib/shortcodes.php:1326
+#: lib/shortcodes.php:1329
 msgid "A,B,C,D,E"
 msgstr ""
 
-#: lib/shortcodes.php:1438
+#: lib/shortcodes.php:1441
 msgid "総計"
 msgstr ""
 
@@ -14207,6 +14213,16 @@ msgstr ""
 #: lib/sns.php:17
 #: tmp/header-ogp.php:80
 msgid "ja_JP"
+msgstr ""
+
+#: lib/theme-update-requirements.php:97
+msgid "更新ZIP内の動作要件を確認できないため、Cocoonの更新を中止しました。"
+msgstr ""
+
+#. translators: 1: 必要なWordPressバージョン、2: 必要なPHPバージョン、3: 現在のWordPressバージョン、4: 現在のPHPバージョン
+#: lib/theme-update-requirements.php:103
+#, php-format
+msgid "このCocoonへの更新にはWordPress %1$s以上・PHP %2$s以上が必要です。現在はWordPress %3$s・PHP %4$sのため、更新できません。"
 msgstr ""
 
 #: lib/tinymce/html-tags.php:49
