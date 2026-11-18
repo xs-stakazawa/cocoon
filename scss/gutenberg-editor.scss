@@ -1154,8 +1154,12 @@ div.cocoon-render-dropdown {
 .wp-block-cocoon-blocks-button-1{
   float: none !important;
   max-width: 840px;
-  margin-left: auto !important;
-  margin-right: auto !important;
+
+  // エディターでは constrained グループに is-content-justification-* クラスが付かないため、constrained 全般をコアの余白指定に任せる
+  &:not(.is-layout-constrained > *){
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
 
   &.alignleft{
     text-align: left;
@@ -1175,7 +1179,7 @@ div.cocoon-render-dropdown {
   //   WordPressコアのボタンブロック（コンテンツ幅中央寄せ）と同じ位置に揃える）
 }
 
-.is-root-container .wp-block-cocoon-blocks-button-1:has(.cocoon-block-button__width-100) {
+.is-root-container .wp-block-cocoon-blocks-button-1:has(.cocoon-block-button__width-100):not(.is-layout-constrained > *) {
   margin-left: auto !important;
   margin-right: auto !important;
 }
@@ -1186,7 +1190,7 @@ div.cocoon-render-dropdown {
 // .wp-block-group を前置して詳細度(0,4,0)に上げ、margin:0 かつ width:100% で親いっぱいに広げ、
 // % 幅の計算基準をグループ幅にする。has-custom-width は 25/50/75/100% すべてで付与されるクラス。
 // （縦積みflex=columnでstretchが効く場合もwidth:100%で確実に、横並びflex=rowでは特にwidth:100%が必須）
-.is-root-container .wp-block-group .wp-block-cocoon-blocks-button-1:has(.has-custom-width) {
+.is-root-container .wp-block-group .wp-block-cocoon-blocks-button-1:has(.has-custom-width):not(.is-layout-constrained > *) {
   margin-left: 0 !important;
   margin-right: 0 !important;
   width: 100%;

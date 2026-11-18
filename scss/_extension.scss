@@ -1470,6 +1470,9 @@ div.search-form{
   // 縦積み（flex）グループ内でも親要素いっぱいに広がるようにします
   &:has(.cocoon-block-button__width-100) {
     float: none !important;
+  }
+  // 幅制限付き(constrained)グループ内では、コアのレイアウト余白(項目の位置揃え)を優先する
+  &:has(.cocoon-block-button__width-100):not(.is-layout-constrained > *) {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
